@@ -27,4 +27,4 @@ As a developer, I want to configure ESLint and Prettier to enforce consistent co
 - [ ] **Run the linter:** Run `npm run lint` and check how the files are changed.
 - [ ] **Test Linting:** Copy `let myvar = 'Hello World'` into `main.js` and observe the errors in the "PROBLEMS" tab of VS Code. You can right-click to fix the problem.
 
-  ![](images/lint-errors.png)
+![](../../../bfritscher/cours-vue-github-project-creator/blob/vue-intro/data/assets/lint-errors.png?raw=true)
