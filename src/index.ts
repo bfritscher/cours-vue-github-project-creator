@@ -98,9 +98,7 @@ for (const epicStory of Object.values(epics)) {
     repo,
     issue: {
       title: epicStory.epic.frontmatter.title!,
-      body: epicStory.epic.frontmatter.role
-        ? `As a ${epicStory.epic.frontmatter.role}, I want to ${epicStory.epic.frontmatter.action} so that ${epicStory.epic.frontmatter.benefit}.`
-        : "",
+      body: epicStory.epic.description,
     },
     labelId,
   });

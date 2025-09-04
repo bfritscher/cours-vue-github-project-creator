@@ -79,3 +79,18 @@ export const UPDATE_ITEM_STATUS_MUTATION = `
     }
   }
 `;
+
+export const UPDATE_ISSUE_MUTATION = `
+  mutation UpdateIssue($issueId: ID!, $body: String!) {
+    updateIssue(input: {
+      id: $issueId,
+      body: $body
+    }) {
+      issue {
+        id
+        number
+        body
+      }
+    }
+  }
+`;

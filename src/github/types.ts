@@ -70,6 +70,16 @@ export type CreateIssueMutationResponse = {
   };
 };
 
+export type UpdateIssueMutationResponse = {
+  updateIssue: {
+    issue: {
+      id: string;
+      number: number;
+      body: string;
+    };
+  };
+};
+
 export type GetProjectQueryResponse = {
   repository: {
     projectsV2: {

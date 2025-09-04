@@ -13,6 +13,7 @@ import type {
   GetProjectQueryResponse,
   GetRepositoryIdQueryResponse,
   SearchIssueQueryResponse,
+  UpdateIssueMutationResponse,
 } from "./types";
 
 import {
@@ -20,6 +21,7 @@ import {
   CREATE_ISSUE_MUTATION,
   CREATE_LABEL_MUTATION,
   LINK_ISSUES_MUTATION,
+  UPDATE_ISSUE_MUTATION,
   UPDATE_ITEM_STATUS_MUTATION,
 } from "./mutations";
 import {
@@ -221,6 +223,11 @@ export async function createIssue({
     throw new Error("GraphQL client not initialized");
   }
 
+  // Replace placeholders in issue body with actual values
+  const processedBody = issue.body
+    .replace(/<<GITHUB_OWNER>>/g, owner)
+    .replace(/<<GITHUB_REPO>>/g, repo);
+
   const searchQuery = `repo:${owner}/${repo} is:issue in:title "${issue.title.trim()}"`;
   const searchResponse = (await graphqlClient(SEARCH_ISSUE_QUERY, {
     searchQuery,
@@ -232,6 +239,16 @@ export async function createIssue({
     console.log(
       `Found existing issue #${existingIssue.number} with title "${existingIssue.title}"`,
     );
+
+    // Update the issue body if it's different
+    if (existingIssue.body !== processedBody) {
+      console.log(`Updating body for existing issue #${existingIssue.number}`);
+      const updateResponse = (await graphqlClient(UPDATE_ISSUE_MUTATION, {
+        issueId: existingIssue.id,
+        body: processedBody,
+      })) as UpdateIssueMutationResponse;
+      console.log(`Updated issue #${updateResponse.updateIssue.issue.number} body`);
+    }
 
     const hasLabel = existingIssue.labels.nodes.some(
       label => label.id === labelId,
@@ -278,7 +295,7 @@ export async function createIssue({
   const createResponse = (await graphqlClient(CREATE_ISSUE_MUTATION, {
     repoId: repositoryId,
     title: issue.title.trim(),
-    body: issue.body,
+    body: processedBody,
     labelIds: [labelId],
   })) as CreateIssueMutationResponse;
 
