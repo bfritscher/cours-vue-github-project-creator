@@ -12,9 +12,9 @@ As a developer, I want to create a new Vue.js project so that I can start buildi
 ### Checklist
 
 - [ ] Change to a parent folder where the project folder will be created.
-- [ ] Use the Vue CLI to create a new project:
+- [ ] Use the Vue CLI to create a new project (`C:\projets`):
   ```sh
-  C:\\temp> npm create vue@latest
+  npm create vue@latest
   ```
 - [ ] When prompted, use the following settings:
   - Project name: `labo-vue`

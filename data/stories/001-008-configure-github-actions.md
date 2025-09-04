@@ -16,7 +16,7 @@ As a developer, I want to configure GitHub Actions to automatically build and de
   ```js
   export default defineConfig(({ mode }) => ({
     plugins: [vue(), vueDevTools()],
-    base: mode === 'production' ? '/<<repo-name>>/' : '/',
+    base: mode === 'production' ? '/<<GITHUB_REPO>>/' : '/',
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),

@@ -18,6 +18,6 @@ As a developer, I want to version my project with Git and push it to GitHub so t
   git add -A
   git commit -m "initial commit"
   git branch -M main
-  git remote add origin https://github.com/heg-web/<<repo-name>>.git
+  git remote add origin https://github.com/<<GITHUB_OWNER>>/<<GITHUB_REPO>>.git
   git push -u origin main
   ```
