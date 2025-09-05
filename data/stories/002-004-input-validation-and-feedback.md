@@ -1,6 +1,6 @@
 ---
 title: Input validation and feedback
-label: Better UX
+label: Initial app
 ---
 
 As a User, I should not be able to click the "add" button if the input is empty or the quantity is less than 1. I should also be informed when the input is invalid so that I know what to correct. Finally, I should be informed with a message if the list is empty.

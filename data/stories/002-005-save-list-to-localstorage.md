@@ -1,6 +1,6 @@
 ---
 title: Save the list with LocalStorage & JSON
-label: Persistence
+label: Initial app
 ---
 
 As a User, I want the shopping list to persist even after I close the browser or refresh the page, so that I can keep track of my items without losing them.

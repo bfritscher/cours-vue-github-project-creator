@@ -1,6 +1,6 @@
 ---
 title: List Transitions
-label: Transitions
+label: Components
 ---
 
 As a User, I want to see smooth transitions when items are added or removed from my shopping list so that I have a better visual experience.
