@@ -50,6 +50,24 @@ export const LINK_ISSUES_MUTATION = `
   }
 `;
 
+export const REMOVE_SUB_ISSUE_MUTATION = `
+  mutation RemoveSubIssue($issueId: ID!, $parentId: ID!) {
+    removeSubIssue(input: {
+      issueId: $parentId,
+      subIssueId: $issueId
+    }) {
+      issue {
+        id
+        number
+      }
+      subIssue {
+        id
+        number
+      }
+    }
+  }
+`;
+
 export const ADD_TO_PROJECT_MUTATION = `
   mutation AddToProject($projectId: ID!, $contentId: ID!) {
     addProjectV2ItemById(input: {
@@ -90,6 +108,24 @@ export const UPDATE_ISSUE_MUTATION = `
         id
         number
         body
+      }
+    }
+  }
+`;
+
+export const ADD_LABELS_TO_LABELABLE_MUTATION = `
+  mutation AddLabelsToLabelable($labelableId: ID!, $labelIds: [ID!]!) {
+    addLabelsToLabelable(input: { labelableId: $labelableId, labelIds: $labelIds }) {
+      labelable {
+        ... on Issue {
+          id
+          labels(first: 10) {
+            nodes {
+              id
+              name
+            }
+          }
+        }
       }
     }
   }

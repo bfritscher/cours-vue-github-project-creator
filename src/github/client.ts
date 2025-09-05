@@ -17,10 +17,12 @@ import type {
 } from "./types";
 
 import {
+  ADD_LABELS_TO_LABELABLE_MUTATION,
   ADD_TO_PROJECT_MUTATION,
   CREATE_ISSUE_MUTATION,
   CREATE_LABEL_MUTATION,
   LINK_ISSUES_MUTATION,
+  REMOVE_SUB_ISSUE_MUTATION,
   UPDATE_ISSUE_MUTATION,
   UPDATE_ITEM_STATUS_MUTATION,
 } from "./mutations";
@@ -255,8 +257,8 @@ export async function createIssue({
     );
     if (!hasLabel) {
       console.log(`Adding label to existing issue #${existingIssue.number}`);
-      await graphqlClient(CREATE_LABEL_MUTATION, {
-        issueId: existingIssue.id,
+      await graphqlClient(ADD_LABELS_TO_LABELABLE_MUTATION, {
+        labelableId: existingIssue.id,
         labelIds: [labelId],
       });
     }
@@ -266,6 +268,28 @@ export async function createIssue({
       const currentParentId = existingIssue.parent?.id;
 
       if (currentParentId !== issue.parentIssueId) {
+        // If the issue has a different parent, remove the old relationship first
+        if (currentParentId) {
+          console.log(
+            `Removing existing parent relationship for issue ${existingIssue.number} from parent ${currentParentId}`,
+          );
+          try {
+            await graphqlClient(REMOVE_SUB_ISSUE_MUTATION, {
+              issueId: existingIssue.id,
+              parentId: currentParentId,
+            });
+            console.log(
+              `Removed existing parent relationship for issue ${existingIssue.number}`,
+            );
+          }
+          catch (error) {
+            console.warn(
+              `Failed to remove existing parent relationship: ${error}`,
+            );
+            // Continue to try adding the new parent
+          }
+        }
+
         console.log(
           `Linking existing issue ${existingIssue.number} to parent issue ${issue.parentIssueId}`,
         );
