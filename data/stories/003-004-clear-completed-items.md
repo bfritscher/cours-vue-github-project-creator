@@ -5,7 +5,7 @@ label: epic-3-components
 
 As a User, I want a button to remove all completed items from my shopping list at once, so that I can quickly clear my list of items I've already purchased.
 
-![](../../assets/vue-delete.png)
+![](../../../../../bfritscher/cours-vue-github-project-creator/blob/vue-intro/data/assets/vue-delete.png?raw=true)
 
 ### Acceptance Criteria
 

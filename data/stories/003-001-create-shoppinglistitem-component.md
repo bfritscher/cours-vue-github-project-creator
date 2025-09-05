@@ -5,7 +5,19 @@ label: epic-3-components
 
 As a Developer, I want to create a reusable component for each shopping list item so that I can remove duplication between both lists.
 
-TODO component picks
+Props/emit interaction
+
+```
+App.vue                          ShoppingListItem.vue
+	│                                       │
+	│  :item="item"  (props down)           │
+	├──────────────────────────────────────▶ │
+	│                                       │
+	│ ◀──────────────────────────────────────┤
+	│   $emit('toggle-checked', item.id)    │  (event up)
+	│                                       │
+	└─ updates state (items[])              │
+```
 
 ### New Concepts
 
