@@ -1,6 +1,6 @@
 ---
 title: Route parameters
-label: Routing
+label: epic-4-routing
 ---
 
 As a User, I want to be able to view a detail page for an item by clicking on a "details" button, so that I can see more information about it.

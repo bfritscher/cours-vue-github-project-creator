@@ -1,6 +1,6 @@
 ---
 title: Eslint / Prettier config
-label: Project Setup
+label: epic-1-foundation
 ---
 
 As a developer, I want to configure ESLint and Prettier to enforce consistent code style and quality, so that the codebase is clean and readable.

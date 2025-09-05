@@ -1,6 +1,6 @@
 ---
 title: CSS Framework
-label: Initial app
+label: epic-2-core-features
 ---
 
 As a developer, I want to add a CSS framework to my project so that I can easily style my application with pre-built components.

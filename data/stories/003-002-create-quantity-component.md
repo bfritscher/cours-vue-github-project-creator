@@ -1,6 +1,6 @@
 ---
 title: Create a quantity component
-label: Components
+label: epic-3-components
 ---
 
 As a Developer, I want to create a reusable component for the quantity input so that I can easily manage item quantities. I also want to reuse this component in the `ShoppingListItem` component to edit the quantity.

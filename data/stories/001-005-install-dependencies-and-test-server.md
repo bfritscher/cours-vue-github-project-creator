@@ -1,6 +1,6 @@
 ---
 title: Install dependencies and test server
-label: Project Setup
+label: epic-1-foundation
 ---
 
 As a developer, I want to install the project dependencies and test the development server so that I can see my application running.

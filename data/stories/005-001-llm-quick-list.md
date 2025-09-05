@@ -1,6 +1,6 @@
 ---
 title: LLM for quick list creation
-label: Advanced
+label: epic-5-advanced
 ---
 
 As a user, I want to be able to provide free text to add items to my list, so that I can quickly create a shopping list.

@@ -1,6 +1,6 @@
 ---
 title: Input validation and feedback
-label: Initial app
+label: epic-2-core-features
 ---
 
 As a User, I should not be able to click the "add" button if the input is empty or the quantity is less than 1. I should also be informed when the input is invalid so that I know what to correct. Finally, I should be informed with a message if the list is empty.

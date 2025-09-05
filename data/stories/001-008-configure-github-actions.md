@@ -1,6 +1,6 @@
 ---
 title: Configure building on the server with Github Actions
-label: Project Setup
+label: epic-1-foundation
 ---
 
 As a developer, I want to configure GitHub Actions to automatically build and deploy my project to GitHub Pages, so that my changes are always available online.

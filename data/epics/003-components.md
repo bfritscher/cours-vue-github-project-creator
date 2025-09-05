@@ -1,6 +1,6 @@
 ---
-title: Components
-label: Components
+title: "Epic 3: Component-Driven Development"
+label: epic-3-components
 ---
 
-This epic focuses on breaking down the application into reusable components.
+This epic introduces the concept of component-based architecture. Students will refactor the application into smaller, reusable components, a core principle of modern web development.

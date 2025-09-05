@@ -1,6 +1,6 @@
 ---
 title: Install VS Code extensions
-label: Project Setup
+label: epic-1-foundation
 ---
 
 As a developer, I want to install helpful VS Code extensions so that I can have a better development experience with Vue.js.

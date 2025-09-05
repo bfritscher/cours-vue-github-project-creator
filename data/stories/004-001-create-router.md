@@ -1,6 +1,6 @@
 ---
 title: Create router
-label: Routing
+label: epic-4-routing
 ---
 
 As a developer, I want to add routing to my application so that I can create multiple pages and navigate between them.

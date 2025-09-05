@@ -1,6 +1,6 @@
 ---
 title: Create a quantity counter
-label: Initial app
+label: epic-2-core-features
 ---
 
 As a User, I want to be able to increment and decrement a quantity number with two buttons so that I can easily adjust the quantity of an item. Use Bootstrap for styling.

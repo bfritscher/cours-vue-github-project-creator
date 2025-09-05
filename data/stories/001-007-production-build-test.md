@@ -1,6 +1,6 @@
 ---
 title: Production build test
-label: Project Setup
+label: epic-1-foundation
 ---
 
 As a developer, I want to create a production build of my application and test it, so that I can see the optimized version that will be deployed.

@@ -1,6 +1,6 @@
 ---
 title: Check items on the list
-label: Initial app
+label: epic-2-core-features
 ---
 
 As a User, I want to be able to check items on my shopping list so that I can mark them as completed. When an item is checked, it will appear in a second list at the bottom and be struck through.

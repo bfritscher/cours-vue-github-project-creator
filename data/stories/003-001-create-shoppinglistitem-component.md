@@ -1,6 +1,6 @@
 ---
 title: Create a ShoppingListItem component
-label: Components
+label: epic-3-components
 ---
 
 As a Developer, I want to create a reusable component for each shopping list item so that I can remove duplication between both lists.

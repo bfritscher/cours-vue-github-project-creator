@@ -1,6 +1,6 @@
 ---
 title: Install development environment
-label: Project Setup
+label: epic-1-foundation
 ---
 
 As a developer, I want to install the necessary tools for Vue.js development so that I can build and run a Vue application.

@@ -1,6 +1,6 @@
 ---
 title: Vue Project Setup / Initialization
-label: Project Setup
+label: epic-1-foundation
 ---
 
 As a developer, I want to create a new Vue.js project so that I can start building my application.

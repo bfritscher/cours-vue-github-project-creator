@@ -1,6 +1,6 @@
 ---
 title: Create a first list + form
-label: Initial app
+label: epic-2-core-features
 ---
 
 As a User, I want to be able to add an item to a list so that I can keep track of my shopping. The item name and quantity should be captured. After adding, the input should be empty and the quantity reset to 1. Each item should have a unique identifier.

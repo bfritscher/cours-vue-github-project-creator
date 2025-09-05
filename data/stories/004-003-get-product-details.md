@@ -1,6 +1,6 @@
 ---
 title: Getting Product details from the web
-label: Routing
+label: epic-4-routing
 ---
 
 As a user, I want to add external data to my items by using API data and selecting the right product, so that I have more information.

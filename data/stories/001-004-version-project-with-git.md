@@ -1,6 +1,6 @@
 ---
 title: Version project with git and GitHub
-label: Project Setup
+label: epic-1-foundation
 ---
 
 As a developer, I want to version my project with Git and push it to GitHub so that my code is saved and I can collaborate with others.
