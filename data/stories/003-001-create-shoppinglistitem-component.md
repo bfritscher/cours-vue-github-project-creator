@@ -13,7 +13,6 @@ TODO component picks
 - **`defineEmits`:** A macro to declare the events a component can emit.
 - **Props and Events:** The primary way for parent and child components to communicate.
 
-
 ### Acceptance Criteria
 
 - [ ] A new `ShoppingListItem.vue` component is created.
@@ -36,4 +35,3 @@ It is best practice not to mutate the prop value in the child, so the `v-model` 
 - [ ] In `App.vue`, import the component and use it in the `v-for` loops, passing the `item` as a prop.
 - [ ] In `App.vue`, listen for the emitted events (`@toggle-checked`) and call a method to update the item.
 </details>
-

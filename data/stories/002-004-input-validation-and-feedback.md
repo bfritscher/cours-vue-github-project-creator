@@ -12,7 +12,6 @@ As a User, I should not be able to click the "add" button if the input is empty 
 - **`v-bind:disabled`:** A directive to conditionally disable an element.
 - **`v-if`:** A directive to conditionally render an element.
 
-
 ### Acceptance Criteria
 
 - [ ] The "add" button is disabled if the item name input is empty.

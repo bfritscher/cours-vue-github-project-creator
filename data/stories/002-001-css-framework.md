@@ -32,13 +32,12 @@ As a developer, I want to add a CSS framework to my project so that I can easily
   ```
 - [ ] Run your application with `npm run dev`
 - [ ] Check that bootstrap works
-  Add a button with the class `btn btn-primary` in your template of `src/App.vue` to test Bootstrap styles.
+      Add a button with the class `btn btn-primary` in your template of `src/App.vue` to test Bootstrap styles.
   ```html
   <button class="btn btn-primary">Test Bootstrap</button>
   ```
 - [ ] Check that Font Awesome works
-  Add an icon with the class `fas fa-check` in your template of `src/App.vue` to test Font Awesome styles.
+      Add an icon with the class `fas fa-check` in your template of `src/App.vue` to test Font Awesome styles.
   ```html
   <i class="fas fa-check"></i>
   ```
-

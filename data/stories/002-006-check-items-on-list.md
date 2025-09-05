@@ -12,7 +12,6 @@ As a User, I want to be able to check items on my shopping list so that I can ma
 - **`computed`:** A function to create a computed property that automatically tracks its reactive dependencies.
 - **text-decoration: line-through:** A CSS property to add a line through text.
 
-
 ### Acceptance Criteria
 
 - [ ] Each shopping list item has a checkbox to mark it as "completed".
@@ -30,4 +29,3 @@ As a User, I want to be able to check items on my shopping list so that I can ma
 - [ ] Add a CSS class for checked items (e.g., `text-decoration: line-through`).
 - [ ] Use a `<label>` to make the full list item clickable to toggle the check.
 </details>
-

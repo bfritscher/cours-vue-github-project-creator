@@ -12,7 +12,6 @@ As a user, I want to add external data to my items by using API data and selecti
 - **`fetch` API:** A modern interface for fetching resources across the network.
 - **`async/await`:** Syntax for handling asynchronous operations.
 
-
 ### Acceptance Criteria
 
 - [ ] On the item detail page, there is a feature to search for product information online.
@@ -28,9 +27,9 @@ As a user, I want to add external data to my items by using API data and selecti
   async function fetchProductDetails(productName) {
     const response = await fetch(
       `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${productName}&lc=fr&countries=Switzerland&search_simple=1&json=1&page_size=20&fields=product_name,quantity,product_type,brands,categories,code,nutriments,nutriscore,url,image_url`,
-    )
-    const data = await response.json()
-    return data
+    );
+    const data = await response.json();
+    return data;
   }
   ```
 - [ ] On the details page, create a button to fetch results using the item name as input.
@@ -38,4 +37,3 @@ As a user, I want to add external data to my items by using API data and selecti
 - [ ] Disable the button while loading to prevent multiple requests.
 - [ ] Don't forget to add an `id` to the received items if one is not provided by the API.
 </details>
-

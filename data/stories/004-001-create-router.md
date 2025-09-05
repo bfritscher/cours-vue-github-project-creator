@@ -50,36 +50,35 @@ As a developer, I want to add routing to my application so that I can create mul
 - [ ] Create the router configuration in `router/index.js`:
 
   ```js
-  import { createRouter, createWebHashHistory } from 'vue-router'
+  import { createRouter, createWebHashHistory } from "vue-router";
 
-  import HomeView from '../views/HomeView.vue'
-  import AboutView from '../views/AboutView.vue'
+  import AboutView from "../views/AboutView.vue";
+  import HomeView from "../views/HomeView.vue";
 
   const routes = [
-    { path: '/', component: HomeView },
-    { path: '/apropos', component: AboutView },
-  ]
+    { path: "/", component: HomeView },
+    { path: "/apropos", component: AboutView },
+  ];
 
   const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
     routes,
-  })
+  });
 
-  export default router
+  export default router;
   ```
 
 - [ ] Connect the router to the app in `main.js`:
 
   ```js
-  import { createApp } from 'vue'
-  import App from './App.vue'
-  import router from './router'
+  import { createApp } from "vue";
 
-  const app = createApp(App)
-  app.use(router)
-  app.mount('#app')
+  import App from "./App.vue";
+  import router from "./router";
+
+  const app = createApp(App);
+  app.use(router);
+  app.mount("#app");
   ```
 
   </details>
-
-

@@ -9,7 +9,6 @@ As a Developer, I want to create a reusable component for the quantity input so 
 
 - **`defineModel`:** A new macro in Vue 3.4+ that simplifies creating components that support `v-model`.
 
-
 ### Acceptance Criteria
 
 - [ ] A new `QuantityInput.vue` component is created for managing quantity.
@@ -29,4 +28,3 @@ As a Developer, I want to create a reusable component for the quantity input so 
 - [ ] Add the `change` event to `defineEmits`.
 - [ ] In `App.vue`, listen for the quantity `change` event and update the item's quantity.
 </details>
-
