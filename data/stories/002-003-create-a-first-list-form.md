@@ -15,6 +15,15 @@ As a User, I want to be able to add an item to a list so that I can keep track o
 - **`v-model`:** A directive to create two-way data bindings on form input and textarea elements.
 - **`crypto.randomUUID()`:** A function to generate a unique ID.
 
+### Acceptance Criteria
+
+- [ ] A form exists to add new items to the shopping list.
+- [ ] The form includes an input field for the item's name and a quantity counter.
+- [ ] When a user enters a name and quantity and clicks "add", the item appears in a list.
+- [ ] Each item in the list is rendered with its name and quantity.
+- [ ] After adding an item, the name input field is cleared and the quantity resets to 1.
+- [ ] Each item added to the list has a unique identifier.
+
 <details>
 <summary>Hints</summary>
 
@@ -24,3 +33,5 @@ As a User, I want to be able to add an item to a list so that I can keep track o
 - [ ] Create a function to handle the "add" button click.
 - [ ] Use `crypto.randomUUID()` to generate a unique ID for each item.
 </details>
+
+

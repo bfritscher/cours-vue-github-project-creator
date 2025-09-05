@@ -12,6 +12,14 @@ As a user, I want to add external data to my items by using API data and selecti
 - **`fetch` API:** A modern interface for fetching resources across the network.
 - **`async/await`:** Syntax for handling asynchronous operations.
 
+
+### Acceptance Criteria
+
+- [ ] On the item detail page, there is a feature to search for product information online.
+- [ ] The application fetches data from the Open Food Facts API using the item's name as a search query.
+- [ ] A loading indicator is shown while the API request is in progress.
+- [ ] The results of the API search are displayed to the user.
+
 <details>
 <summary>Hints</summary>
 
@@ -30,3 +38,4 @@ As a user, I want to add external data to my items by using API data and selecti
 - [ ] Disable the button while loading to prevent multiple requests.
 - [ ] Don't forget to add an `id` to the received items if one is not provided by the API.
 </details>
+

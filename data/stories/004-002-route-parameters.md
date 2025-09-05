@@ -15,6 +15,17 @@ As a User, I want to be able to view a detail page for an item by clicking on a 
 - **`useRoute`:** A composition API function to access the current route object.
 - **Shared State:** Extracting state into a separate file to be used across multiple components.
 
+
+### Acceptance Criteria
+
+- [ ] Users can navigate to a detailed view for each shopping list item.
+    - [ ] The URL for the detail view includes a dynamic parameter for the item's ID (e.g., `/item/123`).
+    - [ ] Navigation to the detail view is initiated by clicking a link or button on the main list.
+- [ ] The application state is managed in a central location (`state.js`) and is accessible to multiple components.
+- [ ] The detail view correctly retrieves and displays the information for the selected item based on the ID in the URL.
+
+
+
 <details>
 <summary>Hints</summary>
 

@@ -12,6 +12,14 @@ As a User, I want to be able to increment and decrement a quantity number with t
 - **`ref`:** A function to create a reactive variable.
 - **`v-on` or `@`:** A directive to listen for DOM events.
 
+### Acceptance Criteria
+
+- [ ] The quantity is displayed as a number on the screen.
+- [ ] There are two buttons, one to increase and one to decrease the quantity.
+- [ ] Clicking the "+" button increments the displayed quantity by 1.
+- [ ] Clicking the "-" button decrements the displayed quantity by 1.
+- [ ] The quantity is a reactive piece of data.
+
 <details>
 <summary>Hints</summary>
 

@@ -10,6 +10,13 @@ As a developer, I want to add a CSS framework to my project so that I can easily
 - **Bootstrap:** A popular CSS framework for building responsive, mobile-first sites.
 - **Font Awesome:** A popular icon set and toolkit.
 
+### Acceptance Criteria
+
+- [ ] Bootstrap and Font Awesome are installed and integrated into the project.
+- [ ] The application's styling is enhanced by Bootstrap's CSS.
+- [ ] A test button styled with `btn btn-primary` is visible and functional.
+- [ ] A Font Awesome icon (e.g., `fas fa-check`) is correctly displayed.
+
 ### Checklist
 
 - [ ] Install Bootstrap and Font Awesome:
@@ -34,3 +41,4 @@ As a developer, I want to add a CSS framework to my project so that I can easily
   ```html
   <i class="fas fa-check"></i>
   ```
+

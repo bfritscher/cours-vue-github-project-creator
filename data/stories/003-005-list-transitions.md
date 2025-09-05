@@ -9,8 +9,12 @@ As a User, I want to see smooth transitions when items are added or removed from
 
 - **`<TransitionGroup>`:** A component for applying transitions to a list of elements.
 
-<details>
-<summary>Hints</summary>
+### Acceptance Criteria
+
+- [ ] When items are added to or removed from the shopping list, they animate smoothly.
+- [ ] The animations provide a clear visual cue that the list has been updated.
+
+### Checklist
 
 - [ ] Use the `<TransitionGroup name="list" tag="div">` in `App.vue`.
 - [ ] Define enter and leave transitions in CSS for the list items.
@@ -37,4 +41,4 @@ As a User, I want to see smooth transitions when items are added or removed from
 }
 ```
 
-</details>
+

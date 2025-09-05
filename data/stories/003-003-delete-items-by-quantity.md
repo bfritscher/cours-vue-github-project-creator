@@ -7,8 +7,8 @@ As a User, I want items to be automatically deleted from my shopping list when t
 
 ### Acceptance Criteria
 
-1.  When a user decreases the quantity of an item to 0, the item is automatically removed from the shopping list.
-2.  The change should be reflected in the UI immediately.
+- [ ] When a user decreases the quantity of an item to 0, the item is automatically removed from the shopping list.
+- [ ] The change is reflected in the UI immediately.
 
 <details>
 <summary>Hints</summary>

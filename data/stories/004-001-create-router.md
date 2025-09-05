@@ -9,9 +9,15 @@ As a developer, I want to add routing to my application so that I can create mul
 
 ### New Concepts
 
-- **Vue Router:** The official router for Vue.js.
+- **Vue Router:** The official router for Vue.js. https://router.vuejs.org/guide/
 - **`<RouterLink>`:** The component for creating navigation links.
 - **`<RouterView>`:** The component that renders the matched component for the current route.
+
+### Acceptance Criteria
+
+- [ ] The application is structured as a multi-page application using Vue Router.
+- [ ] There are at least two pages: a "Home" page for the shopping list and an "About" page.
+- [ ] Users can navigate between these pages using links at the top.
 
 <details>
 <summary>Hints</summary>
@@ -75,3 +81,5 @@ As a developer, I want to add routing to my application so that I can create mul
   ```
 
   </details>
+
+

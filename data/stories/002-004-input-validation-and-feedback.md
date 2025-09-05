@@ -12,6 +12,14 @@ As a User, I should not be able to click the "add" button if the input is empty 
 - **`v-bind:disabled`:** A directive to conditionally disable an element.
 - **`v-if`:** A directive to conditionally render an element.
 
+
+### Acceptance Criteria
+
+- [ ] The "add" button is disabled if the item name input is empty.
+- [ ] The "add" button is also disabled if the quantity is set to 0 or less.
+- [ ] When the shopping list is empty, a message like "No items found" is shown to the user.
+- [ ] These messages are only displayed when the corresponding conditions are met.
+
 <details>
 <summary>Hints</summary>
 

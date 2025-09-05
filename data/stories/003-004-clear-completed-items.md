@@ -9,9 +9,9 @@ As a User, I want a button to remove all completed items from my shopping list a
 
 ### Acceptance Criteria
 
-1.  A "Clear Completed" button is visible on the page, but only when there is at least one completed item on the list.
-2.  When the "Clear Completed" button is clicked, all items that have been marked as completed are removed from the list.
-3.  If there are no completed items, the "Clear Completed" button should not be visible.
+- [ ] A "Clear Completed" button is visible on the page, but only when there is at least one completed item on the list.
+- [ ] When the "Clear Completed" button is clicked, all items that have been marked as completed are removed from the list.
+- [ ] If there are no completed items, the "Clear Completed" button is not be visible.
 
 <details>
 <summary>Hints</summary>
