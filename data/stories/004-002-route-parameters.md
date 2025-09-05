@@ -5,6 +5,10 @@ label: Routing
 
 As a User, I want to be able to view a detail page for an item by clicking on a "details" button, so that I can see more information about it.
 
+![](../../../../../bfritscher/cours-vue-github-project-creator/blob/vue-intro/data/assets/vue-router-param1.png?raw=true)
+
+![](../../../../../bfritscher/cours-vue-github-project-creator/blob/vue-intro/data/assets/vue-router-param2.png?raw=true)
+
 ### New Concepts
 
 - **Route Parameters:** Dynamic segments in the URL used to pass data to routes.

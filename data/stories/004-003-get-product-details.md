@@ -5,6 +5,8 @@ label: External Data
 
 As a user, I want to add external data to my items by using API data and selecting the right product, so that I have more information.
 
+![](../../../../../bfritscher/cours-vue-github-project-creator/blob/vue-intro/data/assets/vue-fetch.png?raw=true)
+
 ### New Concepts
 
 - **`fetch` API:** A modern interface for fetching resources across the network.

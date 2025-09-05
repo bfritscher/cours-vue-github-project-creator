@@ -3,7 +3,9 @@ title: Create a quantity counter
 label: Initial app
 ---
 
-As a User, I want to be able to increment and decrement a quantity number with two buttons so that I can easily adjust the quantity of an item.
+As a User, I want to be able to increment and decrement a quantity number with two buttons so that I can easily adjust the quantity of an item. Use Bootstrap for styling.
+
+![](../../../../../bfritscher/cours-vue-github-project-creator/blob/vue-intro/data/assets/vue-ref.png?raw=true)
 
 ### New Concepts
 

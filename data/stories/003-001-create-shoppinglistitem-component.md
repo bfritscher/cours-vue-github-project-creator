@@ -5,6 +5,8 @@ label: Components
 
 As a Developer, I want to create a reusable component for each shopping list item so that I can remove duplication between both lists.
 
+TODO component picks
+
 ### New Concepts
 
 - **`defineProps`:** A macro to declare props a component can accept.

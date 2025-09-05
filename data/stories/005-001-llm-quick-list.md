@@ -5,6 +5,8 @@ label: Advanced
 
 As a user, I want to be able to provide free text to add items to my list, so that I can quickly create a shopping list.
 
+![](../../../../../bfritscher/cours-vue-github-project-creator/blob/vue-intro/data/assets/vue-ai.png?raw=true)
+
 ### New Concepts
 
 - **Firebase:** A platform for building web and mobile applications.

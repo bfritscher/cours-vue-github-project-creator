@@ -5,6 +5,8 @@ label: Persistence
 
 As a User, I want to be able to check items on my shopping list so that I can mark them as completed. When an item is checked, it will appear in a second list at the bottom and be struck through.
 
+![](../../../../../bfritscher/cours-vue-github-project-creator/blob/vue-intro/data/assets/vue-computed.png?raw=true)
+
 ### New Concepts
 
 - **`computed`:** A function to create a computed property that automatically tracks its reactive dependencies.

@@ -5,6 +5,10 @@ label: Components
 
 As a User, I want to be able to remove items from my shopping list so that I can manage my list more effectively.
 
+TODO split into two issues?
+
+![](../../../../../bfritscher/cours-vue-github-project-creator/blob/vue-intro/data/assets/vue-delete.png?raw=true)
+
 ### User Stories
 
 1. As a user, I want items to be automatically deleted when their quantity becomes less than 1.

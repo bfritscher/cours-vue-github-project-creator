@@ -5,6 +5,8 @@ label: Routing
 
 As a developer, I want to add routing to my application so that I can create multiple pages and navigate between them.
 
+![](../../../../../bfritscher/cours-vue-github-project-creator/blob/vue-intro/data/assets/vue-router.png?raw=true)
+
 ### New Concepts
 
 - **Vue Router:** The official router for Vue.js.
