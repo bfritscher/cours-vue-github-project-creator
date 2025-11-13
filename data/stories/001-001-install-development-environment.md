@@ -25,6 +25,9 @@ git version X.Y.Z
 $ node --version
 vX.Y.Z
 
+$ npm --version
+X.Y.Z
+
 $ code --version
 X.Y.Z
 ...
