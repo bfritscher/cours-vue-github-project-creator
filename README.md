@@ -32,7 +32,7 @@ cp .env.example .env
 Install dependencies:
 
 ```sh
-pnpm install
+npm install
 ```
 
 ## Run
@@ -40,8 +40,59 @@ pnpm install
 Run the tool to create the labels, issues and project cards.
 
 ```sh
-pnpm start
+npm start
 ```
+
+This still uses `GITHUB_OWNER` and `GITHUB_REPO` from `.env` for CLI runs.
+
+## HTTP Server
+
+Start the HTTP server:
+
+```sh
+npm serve
+```
+
+Open `http://localhost:3000` to use the simple web page.
+
+The page accepts a GitHub repository URL, starts the bootstrap, streams logs, and updates a simple progress bar as work completes.
+
+You can also trigger the run directly over HTTP with a POST request:
+
+```sh
+curl -N http://localhost:3000/api/run \
+  -H "Content-Type: application/json" \
+  -d '{"owner":"your-org","repo":"your-repo"}'
+```
+
+Or provide a repository URL instead:
+
+```sh
+curl -N http://localhost:3000/api/run \
+  -H "Content-Type: application/json" \
+  -d '{"repoUrl":"https://github.com/your-org/your-repo"}'
+```
+
+The response is streamed as newline-delimited JSON so you can consume progress and logs while the run is in flight.
+
+## Docker
+
+Build the image:
+
+```sh
+docker build -t github-project-creator .
+```
+
+Run the HTTP server in Docker:
+
+```sh
+docker run --rm -p 3000:3000 \
+  -e GITHUB_TOKEN=your-github-token \
+  -e GITHUB_PROJECT_TEMPLATE_NAME=LIA_TEMPLATE \
+  github-project-creator
+```
+
+Then open `http://localhost:3000`.
 
 ## Use this tool for other projects
 

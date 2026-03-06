@@ -25,6 +25,7 @@ import type {
   UserProjectsQueryResponse,
 } from "./types";
 
+import { logError, logInfo, logWarn } from "../logger";
 import {
   ADD_LABELS_TO_LABELABLE_MUTATION,
   ADD_TO_PROJECT_MUTATION,
@@ -120,7 +121,7 @@ export async function getProjectInfo({
   }
   catch (error) {
     if (error instanceof Error) {
-      console.error(error);
+      logError(error);
       throw new TypeError(
         `Failed to get project information: ${error.message}`,
       );
@@ -156,7 +157,7 @@ export async function ensureProjectFromTemplate({
     );
   }
 
-  console.log(
+  logInfo(
     `No linked project found for ${owner}/${repo}. Copying template project "${templateProjectName}"`,
   );
 
@@ -167,7 +168,7 @@ export async function ensureProjectFromTemplate({
   })) as CopyProjectMutationResponse;
 
   const copiedProject = copyResponse.copyProjectV2.projectV2;
-  console.log(
+  logInfo(
     `Copied template project to "${copiedProject.title}" (number: ${copiedProject.number})`,
   );
 
@@ -252,7 +253,7 @@ async function syncDirectRepoCollaboratorsToProject({
     });
 
   if (projectCollaborators.length === 0) {
-    console.log(`No direct repository collaborators found for ${owner}/${repo}`);
+    logInfo(`No direct repository collaborators found for ${owner}/${repo}`);
     return;
   }
 
@@ -261,7 +262,7 @@ async function syncDirectRepoCollaboratorsToProject({
     collaborators: projectCollaborators,
   }) as UpdateProjectCollaboratorsMutationResponse;
 
-  console.log(
+  logInfo(
     `Granted project access to ${projectCollaborators.length} direct repository collaborator(s)`,
   );
 }
@@ -284,7 +285,7 @@ async function getProjectInfoById(projectId: string): Promise<ProjectInfo> {
 
 function getValidatedProjectInfo(project: ProjectNode): ProjectInfo {
   const layout = project.views.nodes[0]?.layout;
-  console.log(
+  logInfo(
     `Found project: ${project.title} (number: ${project.number}, layout: ${layout})`,
   );
 
@@ -344,13 +345,13 @@ export async function createLabelIfNotExists({
     })) as GetLabelQueryResponse;
 
     if (labelResponse.node.label) {
-      console.log(`Label "${label.name}" already exists`);
+      logInfo(`Label "${label.name}" already exists`);
       return labelResponse.node.label;
     }
 
     const color = label.color || getNextRandomColor();
 
-    console.log("Creating label:", {
+    logInfo("Creating label:", {
       name: label.name,
     });
 
@@ -365,7 +366,7 @@ export async function createLabelIfNotExists({
   }
   catch (error) {
     if (error instanceof Error) {
-      console.error(error);
+      logError(error);
       throw new TypeError(
         `Failed to create label "${label.name}": ${error.message}`,
       );
@@ -398,25 +399,25 @@ export async function createIssue({
   const existingIssues = searchResponse.search.nodes;
   if (existingIssues.length > 0) {
     const existingIssue = existingIssues[0];
-    console.log(
+    logInfo(
       `Found existing issue #${existingIssue.number} with title "${existingIssue.title}"`,
     );
 
     // Update the issue body if it's different
     if (existingIssue.body !== processedBody) {
-      console.log(`Updating body for existing issue #${existingIssue.number}`);
+      logInfo(`Updating body for existing issue #${existingIssue.number}`);
       const updateResponse = (await graphqlClient(UPDATE_ISSUE_MUTATION, {
         issueId: existingIssue.id,
         body: processedBody,
       })) as UpdateIssueMutationResponse;
-      console.log(`Updated issue #${updateResponse.updateIssue.issue.number} body`);
+      logInfo(`Updated issue #${updateResponse.updateIssue.issue.number} body`);
     }
 
     const hasLabel = existingIssue.labels.nodes.some(
       label => label.id === labelId,
     );
     if (!hasLabel) {
-      console.log(`Adding label to existing issue #${existingIssue.number}`);
+      logInfo(`Adding label to existing issue #${existingIssue.number}`);
       await graphqlClient(ADD_LABELS_TO_LABELABLE_MUTATION, {
         labelableId: existingIssue.id,
         labelIds: [labelId],
@@ -424,13 +425,13 @@ export async function createIssue({
     }
 
     if (issue.parentIssueId) {
-      console.log(`Checking parent issue link for #${existingIssue.number}`);
+      logInfo(`Checking parent issue link for #${existingIssue.number}`);
       const currentParentId = existingIssue.parent?.id;
 
       if (currentParentId !== issue.parentIssueId) {
         // If the issue has a different parent, remove the old relationship first
         if (currentParentId) {
-          console.log(
+          logInfo(
             `Removing existing parent relationship for issue ${existingIssue.number} from parent ${currentParentId}`,
           );
           try {
@@ -438,31 +439,31 @@ export async function createIssue({
               issueId: existingIssue.id,
               parentId: currentParentId,
             });
-            console.log(
+            logInfo(
               `Removed existing parent relationship for issue ${existingIssue.number}`,
             );
           }
           catch (error) {
-            console.warn(
+            logWarn(
               `Failed to remove existing parent relationship: ${error}`,
             );
             // Continue to try adding the new parent
           }
         }
 
-        console.log(
+        logInfo(
           `Linking existing issue ${existingIssue.number} to parent issue ${issue.parentIssueId}`,
         );
         await graphqlClient(LINK_ISSUES_MUTATION, {
           issueId: existingIssue.id,
           parentId: issue.parentIssueId,
         });
-        console.log(
+        logInfo(
           `Linked existing issue ${existingIssue.number} to parent issue ${issue.parentIssueId}`,
         );
       }
       else {
-        console.log(
+        logInfo(
           `Issue #${existingIssue.number} is already linked to parent issue ${issue.parentIssueId}`,
         );
       }
@@ -471,7 +472,7 @@ export async function createIssue({
     return existingIssue.id;
   }
 
-  console.log("Creating new issue:", {
+  logInfo("Creating new issue:", {
     title: issue.title,
     parentIssueId: issue.parentIssueId,
   });
@@ -485,14 +486,14 @@ export async function createIssue({
 
   const newIssueId = createResponse.createIssue.issue.id;
   const newIssueNumber = createResponse.createIssue.issue.number;
-  console.log(`Created issue #${newIssueNumber} with ID: ${newIssueId}`);
+  logInfo(`Created issue #${newIssueNumber} with ID: ${newIssueId}`);
 
   if (issue.parentIssueId) {
     await graphqlClient(LINK_ISSUES_MUTATION, {
       issueId: newIssueId,
       parentId: issue.parentIssueId,
     });
-    console.log(
+    logInfo(
       `Linked issue ${newIssueNumber} to parent issue ${issue.parentIssueId}`,
     );
   }
@@ -538,11 +539,11 @@ export async function addToProject({
     const projectItems = await getProjectItems(projectInfo.projectId);
 
     if (projectItems.has(issueId)) {
-      console.log(`Issue ${issueId} is already in the project`);
+      logInfo(`Issue ${issueId} is already in the project`);
       return;
     }
 
-    console.log(`Adding issue ${issueId} to project`);
+    logInfo(`Adding issue ${issueId} to project`);
     const addResponse = (await graphqlClient(ADD_TO_PROJECT_MUTATION, {
       projectId: projectInfo.projectId,
       contentId: issueId,
@@ -557,11 +558,11 @@ export async function addToProject({
       optionId: projectInfo.optionId,
     });
 
-    console.log(`Added issue ${issueId} to project and set status to Backlog`);
+    logInfo(`Added issue ${issueId} to project and set status to Backlog`);
   }
   catch (error) {
     if (error instanceof Error) {
-      console.error(error);
+      logError(error);
       throw new TypeError(`Failed to add issue to project: ${error.message}`);
     }
     throw error;

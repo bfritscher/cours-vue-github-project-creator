@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Project Creator</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f2efe8;
+        --panel: rgba(255, 252, 246, 0.92);
+        --ink: #17312a;
+        --muted: #5a6d66;
+        --accent: #0f8a5f;
+        --accent-soft: #bfe5d7;
+        --border: rgba(23, 49, 42, 0.12);
+        --danger: #a63b31;
+        --shadow: 0 24px 80px rgba(43, 68, 59, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+        color: var(--ink);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      main {
+        width: min(720px, 100%);
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        padding: 28px;
+        backdrop-filter: blur(12px);
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-family: "Aptos Display", "Segoe UI", sans-serif;
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      form {
+        margin-top: 28px;
+        display: grid;
+        gap: 14px;
+      }
+
+      label {
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+      }
+
+      input,
+      button {
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        font: inherit;
+      }
+
+      input {
+        width: 100%;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.74);
+        color: var(--ink);
+      }
+
+      button {
+        padding: 14px 20px;
+        border: none;
+        background: var(--ink);
+        color: white;
+        cursor: pointer;
+        min-width: 148px;
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: wait;
+      }
+
+      .status {
+        margin-top: 26px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .progress-shell {
+        height: 16px;
+        border-radius: 999px;
+        background: rgba(23, 49, 42, 0.08);
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #1a6d55 0%, var(--accent) 100%);
+        transition: width 180ms ease;
+      }
+
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 0.92rem;
+        color: var(--muted);
+      }
+
+      .logbox {
+        margin-top: 12px;
+        min-height: 220px;
+        max-height: 320px;
+        overflow: auto;
+        padding: 14px;
+        border-radius: 16px;
+        background: #18352e;
+        color: #edf8f3;
+        font-family: "Cascadia Code", "Consolas", monospace;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+
+      .error {
+        color: var(--danger);
+      }
+
+      @media (max-width: 640px) {
+        main {
+          padding: 22px;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>GitHub Project Creator</h1>
+      <p>
+        Paste a GitHub repository URL, and watch the progress as labels, issues, and project cards
+        are created.
+      </p>
+
+      <form id="run-form">
+        <label for="repo-url">Repository URL</label>
+        <div class="row">
+          <input id="repo-url" name="repo-url" type="url" placeholder="https://github.com/owner/repo" required />
+          <button id="submit-button" type="submit">Run</button>
+        </div>
+      </form>
+
+      <section class="status" aria-live="polite">
+        <div class="meta">
+          <strong id="status-text">Idle</strong>
+          <span id="progress-text">0%</span>
+        </div>
+        <div class="progress-shell" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        <div id="summary" class="meta">
+          <span>Waiting for input</span>
+          <span id="step-text">0 / 0</span>
+        </div>
+        <div id="error-text" class="error"></div>
+        <div id="logs" class="logbox">No run yet.</div>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById("run-form");
+      const repoUrlInput = document.getElementById("repo-url");
+      const submitButton = document.getElementById("submit-button");
+      const statusText = document.getElementById("status-text");
+      const progressText = document.getElementById("progress-text");
+      const stepText = document.getElementById("step-text");
+      const summary = document.getElementById("summary");
+      const progressBar = document.getElementById("progress-bar");
+      const logBox = document.getElementById("logs");
+      const errorText = document.getElementById("error-text");
+      const progressShell = document.querySelector(".progress-shell");
+
+      function setProgress(percent, completedSteps, totalSteps, message) {
+        const safePercent = Math.max(0, Math.min(100, percent));
+        progressBar.style.width = `${safePercent}%`;
+        progressShell.setAttribute("aria-valuenow", String(safePercent));
+        progressText.textContent = `${safePercent}%`;
+        stepText.textContent = `${completedSteps} / ${totalSteps}`;
+        if (message) {
+          statusText.textContent = message;
+        }
+      }
+
+      function setLogs(lines) {
+        logBox.textContent = lines.length > 0 ? lines.join("\n") : "No logs yet.";
+        logBox.scrollTop = logBox.scrollHeight;
+      }
+
+      async function consumeStream(response) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        let latestLogs = [];
+
+        while (true) {
+          const { done, value } = await reader.read();
+          buffer += decoder.decode(value || new Uint8Array(), { stream: !done });
+
+          let newlineIndex = buffer.indexOf("\n");
+          while (newlineIndex !== -1) {
+            const rawLine = buffer.slice(0, newlineIndex).trim();
+            buffer = buffer.slice(newlineIndex + 1);
+
+            if (rawLine) {
+              const event = JSON.parse(rawLine);
+
+              if (event.type === "start") {
+                summary.firstElementChild.textContent = `${event.owner}/${event.repo}`;
+                statusText.textContent = "Starting run";
+              }
+
+              if (event.type === "progress") {
+                setProgress(event.percent, event.completedSteps, event.totalSteps, event.message);
+              }
+
+              if (event.type === "log") {
+                latestLogs = event.logs || latestLogs.concat(`[${event.level}] ${event.message}`);
+                setLogs(latestLogs);
+              }
+
+              if (event.type === "done") {
+                statusText.textContent = "Completed";
+                setProgress(100, event.result.totalSteps, event.result.totalSteps, "Completed");
+                summary.firstElementChild.textContent = `Created ${event.result.epicCount} epics and ${event.result.storyCount} stories`;
+                setLogs(event.logs || latestLogs);
+              }
+
+              if (event.type === "error") {
+                throw new Error(event.message || "Run failed");
+              }
+            }
+
+            newlineIndex = buffer.indexOf("\n");
+          }
+
+          if (done) {
+            break;
+          }
+        }
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        submitButton.disabled = true;
+        errorText.textContent = "";
+        summary.firstElementChild.textContent = "Connecting";
+        setProgress(0, 0, 0, "Queueing request");
+        setLogs([]);
+
+        try {
+          const response = await fetch("/api/run", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ repoUrl: repoUrlInput.value }),
+          });
+
+          if (!response.ok) {
+            const payload = await response.json().catch(() => ({ error: "Request failed" }));
+            throw new Error(payload.error || "Request failed");
+          }
+
+          await consumeStream(response);
+        } catch (error) {
+          errorText.textContent = error instanceof Error ? error.message : "Unexpected error";
+          statusText.textContent = "Failed";
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>
