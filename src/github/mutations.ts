@@ -81,6 +81,49 @@ export const ADD_TO_PROJECT_MUTATION = `
   }
 `;
 
+export const COPY_PROJECT_MUTATION = `
+  mutation CopyProject($ownerId: ID!, $projectId: ID!, $title: String!) {
+    copyProjectV2(input: {
+      ownerId: $ownerId,
+      projectId: $projectId,
+      title: $title
+    }) {
+      projectV2 {
+        id
+        title
+        number
+      }
+    }
+  }
+`;
+
+export const LINK_PROJECT_TO_REPOSITORY_MUTATION = `
+  mutation LinkProjectToRepository($projectId: ID!, $repositoryId: ID!) {
+    linkProjectV2ToRepository(input: {
+      projectId: $projectId,
+      repositoryId: $repositoryId
+    }) {
+      repository {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const UPDATE_PROJECT_COLLABORATORS_MUTATION = `
+  mutation UpdateProjectCollaborators($projectId: ID!, $collaborators: [ProjectV2Collaborator!]!) {
+    updateProjectV2Collaborators(input: {
+      projectId: $projectId,
+      collaborators: $collaborators
+    }) {
+      collaborators(first: 100) {
+        totalCount
+      }
+    }
+  }
+`;
+
 export const UPDATE_ITEM_STATUS_MUTATION = `
   mutation UpdateItemStatus($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
     updateProjectV2ItemFieldValue(input: {

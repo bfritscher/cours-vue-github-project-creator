@@ -1,36 +1,51 @@
 import { graphql } from "@octokit/graphql";
+import { Octokit } from "@octokit/rest";
 
 import type {
   AddToProjectMutationResponse,
   AddToProjectParams,
   CheckProjectMembershipQueryResponse,
+  CopyProjectMutationResponse,
   CreateIssueMutationResponse,
   CreateIssueParams,
   CreateLabelMutationResponse,
   CreateLabelParams,
   GetLabelQueryResponse,
+  GetProjectByIdQueryResponse,
   GetProjectIdParams,
   GetProjectQueryResponse,
   GetRepositoryIdQueryResponse,
+  LinkProjectToRepositoryMutationResponse,
+  OrganizationProjectsQueryResponse,
+  ProjectInfo,
+  ProjectNode,
   SearchIssueQueryResponse,
   UpdateIssueMutationResponse,
+  UpdateProjectCollaboratorsMutationResponse,
+  UserProjectsQueryResponse,
 } from "./types";
 
 import {
   ADD_LABELS_TO_LABELABLE_MUTATION,
   ADD_TO_PROJECT_MUTATION,
+  COPY_PROJECT_MUTATION,
   CREATE_ISSUE_MUTATION,
   CREATE_LABEL_MUTATION,
   LINK_ISSUES_MUTATION,
+  LINK_PROJECT_TO_REPOSITORY_MUTATION,
   REMOVE_SUB_ISSUE_MUTATION,
   UPDATE_ISSUE_MUTATION,
   UPDATE_ITEM_STATUS_MUTATION,
+  UPDATE_PROJECT_COLLABORATORS_MUTATION,
 } from "./mutations";
 import {
   CHECK_PROJECT_MEMBERSHIP_QUERY,
   GET_LABEL_QUERY,
+  GET_ORGANIZATION_TEMPLATE_PROJECT_QUERY,
+  GET_PROJECT_BY_ID_QUERY,
   GET_PROJECT_QUERY,
   GET_REPO_ID_QUERY,
+  GET_USER_TEMPLATE_PROJECT_QUERY,
   SEARCH_ISSUE_QUERY,
 } from "./queries";
 
@@ -54,6 +69,7 @@ function getNextRandomColor(): string {
 }
 
 let graphqlClient: typeof graphql | null = null;
+let restClient: Octokit | null = null;
 
 const projectItemsCache = new Map<string, Set<string>>();
 
@@ -63,6 +79,7 @@ export function initClient(token: string) {
       authorization: `token ${token}`,
     },
   });
+  restClient = new Octokit({ auth: token });
 }
 
 export async function getRepositoryId({
@@ -84,15 +101,7 @@ export async function getRepositoryId({
 export async function getProjectInfo({
   owner,
   repo,
-}: GetProjectIdParams): Promise<
-  | {
-    projectId: string;
-    projectNumber: number;
-    fieldId: string;
-    optionId: string;
-  }
-  | undefined
-  > {
+}: GetProjectIdParams): Promise<ProjectInfo | undefined> {
   if (!graphqlClient) {
     throw new Error("GraphQL client not initialized");
   }
@@ -102,61 +111,12 @@ export async function getProjectInfo({
       repo,
     })) as GetProjectQueryResponse;
 
-    const projects = response.repository.projectsV2.nodes;
-    if (!projects || projects.length === 0) {
-      throw new Error(
-        `No projects found in repository ${owner}/${repo}. Please ensure:
-1. The repository has at least one project (V2)
-2. The project is accessible to the authenticated user
-3. The GITHUB_TOKEN has the necessary permissions (project scope)`,
-      );
+    const project = response.repository.projectsV2.nodes[0];
+    if (!project) {
+      return undefined;
     }
 
-    const project = projects[0];
-    const layout = project.views.nodes[0]?.layout;
-    console.log(
-      `Found project: ${project.title} (number: ${project.number}, layout: ${layout})`,
-    );
-
-    if (layout !== "BOARD_LAYOUT") {
-      throw new Error(
-        `Project "${project.title}" is not a board view project. It is currently in ${layout} view.
-To fix this:
-1. Go to the project settings
-2. Click "Layout"
-3. Select "Board" view
-4. Add a "Backlog" column`,
-      );
-    }
-
-    const statusField = project.fields.nodes.find(
-      field => field.name === "Status",
-    );
-    if (!statusField) {
-      throw new Error(
-        `No Status field found in project "${project.title}".
-Please add a "Status" field to your project.`,
-      );
-    }
-
-    const backlogOption = statusField.options?.find(
-      option => option.name === "Backlog",
-    );
-    if (!backlogOption) {
-      throw new Error(
-        `No "Backlog" option found in Status field. Available options: ${statusField.options
-          ?.map(o => o.name)
-          .join(", ")}.
-Please add a "Backlog" option to your Status field.`,
-      );
-    }
-
-    return {
-      projectId: project.id,
-      projectNumber: project.number,
-      fieldId: statusField.id,
-      optionId: backlogOption.id,
-    };
+    return getValidatedProjectInfo(project);
   }
   catch (error) {
     if (error instanceof Error) {
@@ -167,6 +127,206 @@ Please add a "Backlog" option to your Status field.`,
     }
     throw error;
   }
+}
+
+export async function ensureProjectFromTemplate({
+  owner,
+  repo,
+  repositoryId,
+  templateProjectName,
+}: GetProjectIdParams & {
+  repositoryId: string;
+  templateProjectName: string;
+}): Promise<ProjectInfo> {
+  if (!graphqlClient) {
+    throw new Error("GraphQL client not initialized");
+  }
+
+  const ownerNode = await getTemplateProjectOwner(owner, templateProjectName);
+  if (!ownerNode) {
+    throw new Error(`Could not resolve owner "${owner}" to a GitHub user or organization`);
+  }
+
+  const templateProject = ownerNode.projectsV2.nodes.find(
+    project => project.title === templateProjectName,
+  );
+  if (!templateProject) {
+    throw new Error(
+      `No project named "${templateProjectName}" was found under owner "${owner}"`,
+    );
+  }
+
+  console.log(
+    `No linked project found for ${owner}/${repo}. Copying template project "${templateProjectName}"`,
+  );
+
+  const copyResponse = (await graphqlClient(COPY_PROJECT_MUTATION, {
+    ownerId: ownerNode.id,
+    projectId: templateProject.id,
+    title: repo,
+  })) as CopyProjectMutationResponse;
+
+  const copiedProject = copyResponse.copyProjectV2.projectV2;
+  console.log(
+    `Copied template project to "${copiedProject.title}" (number: ${copiedProject.number})`,
+  );
+
+  await graphqlClient(LINK_PROJECT_TO_REPOSITORY_MUTATION, {
+    projectId: copiedProject.id,
+    repositoryId,
+  }) as LinkProjectToRepositoryMutationResponse;
+
+  await syncDirectRepoCollaboratorsToProject({
+    owner,
+    repo,
+    projectId: copiedProject.id,
+  });
+
+  projectItemsCache.delete(copiedProject.id);
+
+  return await getProjectInfoById(copiedProject.id);
+}
+
+async function getTemplateProjectOwner(owner: string, templateProjectName: string): Promise<{
+  id: string;
+  projectsV2: {
+    nodes: Array<{
+      id: string;
+      title: string;
+      number: number;
+    }>;
+  };
+} | null> {
+  if (!graphqlClient) {
+    throw new Error("GraphQL client not initialized");
+  }
+
+  const organizationResponse = (await graphqlClient(GET_ORGANIZATION_TEMPLATE_PROJECT_QUERY, {
+    owner,
+    projectName: templateProjectName,
+  })) as OrganizationProjectsQueryResponse;
+
+  if (organizationResponse.organization) {
+    return organizationResponse.organization;
+  }
+
+  const userResponse = (await graphqlClient(GET_USER_TEMPLATE_PROJECT_QUERY, {
+    owner,
+    projectName: templateProjectName,
+  })) as UserProjectsQueryResponse;
+
+  return userResponse.user;
+}
+
+async function syncDirectRepoCollaboratorsToProject({
+  owner,
+  repo,
+  projectId,
+}: GetProjectIdParams & {
+  projectId: string;
+}): Promise<void> {
+  if (!graphqlClient || !restClient) {
+    throw new Error("GitHub clients not initialized");
+  }
+
+  const collaborators = await restClient.paginate(restClient.rest.repos.listCollaborators, {
+    owner,
+    repo,
+    affiliation: "direct",
+    per_page: 100,
+  });
+
+  const projectCollaborators = collaborators
+    .filter(collaborator => collaborator.type === "User")
+    .map((collaborator) => {
+      const role = collaborator.permissions?.admin
+        ? "ADMIN"
+        : collaborator.permissions?.pull && !collaborator.permissions?.push && !collaborator.permissions?.maintain
+          ? "READER"
+          : "WRITER";
+
+      return {
+        userId: collaborator.node_id,
+        role,
+      };
+    });
+
+  if (projectCollaborators.length === 0) {
+    console.log(`No direct repository collaborators found for ${owner}/${repo}`);
+    return;
+  }
+
+  await graphqlClient(UPDATE_PROJECT_COLLABORATORS_MUTATION, {
+    projectId,
+    collaborators: projectCollaborators,
+  }) as UpdateProjectCollaboratorsMutationResponse;
+
+  console.log(
+    `Granted project access to ${projectCollaborators.length} direct repository collaborator(s)`,
+  );
+}
+
+async function getProjectInfoById(projectId: string): Promise<ProjectInfo> {
+  if (!graphqlClient) {
+    throw new Error("GraphQL client not initialized");
+  }
+
+  const response = (await graphqlClient(GET_PROJECT_BY_ID_QUERY, {
+    projectId,
+  })) as GetProjectByIdQueryResponse;
+
+  if (!response.node) {
+    throw new Error(`Project ${projectId} could not be loaded after creation`);
+  }
+
+  return getValidatedProjectInfo(response.node);
+}
+
+function getValidatedProjectInfo(project: ProjectNode): ProjectInfo {
+  const layout = project.views.nodes[0]?.layout;
+  console.log(
+    `Found project: ${project.title} (number: ${project.number}, layout: ${layout})`,
+  );
+
+  if (layout !== "BOARD_LAYOUT") {
+    throw new Error(
+      `Project "${project.title}" is not a board view project. It is currently in ${layout} view.
+To fix this:
+1. Go to the project settings
+2. Click "Layout"
+3. Select "Board" view
+4. Add a "Backlog" column`,
+    );
+  }
+
+  const statusField = project.fields.nodes.find(
+    field => field.name === "Status",
+  );
+  if (!statusField) {
+    throw new Error(
+      `No Status field found in project "${project.title}".
+Please add a "Status" field to your project.`,
+    );
+  }
+
+  const backlogOption = statusField.options?.find(
+    option => option.name === "Backlog",
+  );
+  if (!backlogOption) {
+    throw new Error(
+      `No "Backlog" option found in Status field. Available options: ${statusField.options
+        ?.map(option => option.name)
+        .join(", ")}.
+Please add a "Backlog" option to your Status field.`,
+    );
+  }
+
+  return {
+    projectId: project.id,
+    projectNumber: project.number,
+    fieldId: statusField.id,
+    optionId: backlogOption.id,
+  };
 }
 
 export async function createLabelIfNotExists({

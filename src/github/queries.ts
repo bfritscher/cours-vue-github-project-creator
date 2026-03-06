@@ -40,6 +40,68 @@ export const GET_PROJECT_QUERY = `
   }
 `;
 
+export const GET_PROJECT_BY_ID_QUERY = `
+  query GetProjectById($projectId: ID!) {
+    node(id: $projectId) {
+      ... on ProjectV2 {
+        id
+        title
+        number
+        views(first: 1) {
+          nodes {
+            ... on ProjectV2View {
+              layout
+            }
+          }
+        }
+        fields(first: 20) {
+          nodes {
+            ... on ProjectV2SingleSelectField {
+              id
+              name
+              dataType
+              options {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ORGANIZATION_TEMPLATE_PROJECT_QUERY = `
+  query GetOrganizationTemplateProject($owner: String!, $projectName: String!) {
+    organization(login: $owner) {
+      id
+      projectsV2(first: 10, query: $projectName) {
+        nodes {
+          id
+          title
+          number
+        }
+      }
+    }
+  }
+`;
+
+export const GET_USER_TEMPLATE_PROJECT_QUERY = `
+  query GetUserTemplateProject($owner: String!, $projectName: String!) {
+    user(login: $owner) {
+      id
+      projectsV2(first: 10, query: $projectName) {
+        nodes {
+          id
+          title
+          number
+        }
+      }
+    }
+  }
+`;
+
 export const GET_LABEL_QUERY = `
   query GetLabel($repoId: ID!, $name: String!) {
     node(id: $repoId) {

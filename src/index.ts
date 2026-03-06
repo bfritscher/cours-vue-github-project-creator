@@ -9,6 +9,7 @@ import {
   createIssue,
   createIssueAddToProject,
   createLabelIfNotExists,
+  ensureProjectFromTemplate,
   getProjectInfo,
   getRepositoryId,
   initClient,
@@ -28,6 +29,7 @@ dotenv.config();
 const owner = process.env.GITHUB_OWNER;
 const repo = process.env.GITHUB_REPO;
 const token = process.env.GITHUB_TOKEN;
+const projectTemplateName = process.env.GITHUB_PROJECT_TEMPLATE_NAME || "LIA_TEMPLATE";
 
 if (!owner || !repo || !token) {
   throw new Error("GITHUB_OWNER, GITHUB_REPO and GITHUB_TOKEN must be set in .env");
@@ -35,11 +37,14 @@ if (!owner || !repo || !token) {
 
 initClient(token);
 
-const projectInfo = await getProjectInfo({ owner, repo });
-if (!projectInfo) {
-  throw new Error("Could not find project information");
-}
 const repositoryId = await getRepositoryId({ owner, repo });
+const projectInfo = await getProjectInfo({ owner, repo })
+  ?? await ensureProjectFromTemplate({
+    owner,
+    repo,
+    repositoryId,
+    templateProjectName: projectTemplateName,
+  });
 
 const epics: Record<string, {
   epic: MDStory & {

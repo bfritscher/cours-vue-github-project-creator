@@ -27,6 +27,28 @@ export type ProjectInfo = {
   optionId: string;
 };
 
+export type ProjectNode = {
+  id: string;
+  title: string;
+  number: number;
+  views: {
+    nodes: Array<{
+      layout: string;
+    }>;
+  };
+  fields: {
+    nodes: Array<{
+      id: string;
+      name: string;
+      dataType: string;
+      options?: Array<{
+        id: string;
+        name: string;
+      }>;
+    }>;
+  };
+};
+
 export type CreateIssueParams = {
   issue: Issue;
   labelId: string;
@@ -83,28 +105,65 @@ export type UpdateIssueMutationResponse = {
 export type GetProjectQueryResponse = {
   repository: {
     projectsV2: {
+      nodes: ProjectNode[];
+    };
+  };
+};
+
+export type GetProjectByIdQueryResponse = {
+  node: ProjectNode | null;
+};
+
+export type OrganizationProjectsQueryResponse = {
+  organization: {
+    id: string;
+    projectsV2: {
       nodes: Array<{
         id: string;
         title: string;
         number: number;
-        views: {
-          nodes: Array<{
-            layout: string;
-          }>;
-        };
-        fields: {
-          nodes: Array<{
-            id: string;
-            name: string;
-            dataType: string;
-            options?: Array<{
-              id: string;
-              name: string;
-            }>;
-          }>;
-        };
       }>;
     };
+  } | null;
+};
+
+export type UserProjectsQueryResponse = {
+  user: {
+    id: string;
+    projectsV2: {
+      nodes: Array<{
+        id: string;
+        title: string;
+        number: number;
+      }>;
+    };
+  } | null;
+};
+
+export type CopyProjectMutationResponse = {
+  copyProjectV2: {
+    projectV2: {
+      id: string;
+      title: string;
+      number: number;
+    };
+  };
+};
+
+export type LinkProjectToRepositoryMutationResponse = {
+  linkProjectV2ToRepository: {
+    repository: {
+      id: string;
+      name: string;
+    };
+  };
+};
+
+export type UpdateProjectCollaboratorsMutationResponse = {
+  updateProjectV2Collaborators: {
+    collaborators: {
+      totalCount: number;
+    } | null;
   };
 };
 

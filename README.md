@@ -7,11 +7,21 @@ A tool to create all the labels, issues and project cards for the Travel Log pro
 ### Repo / Project Setup
 
 1. Create a repo on github
-2. Add a project to the repo and choose the "Kanban" template
+2. Create a template project named `LIA_TEMPLATE`, or set `GITHUB_PROJECT_TEMPLATE_NAME` to a different project name
+
+The template project must have the following setup:
+
+- A board view layout
+- A single select field named `Status`
+- A `Status` option named `Backlog`
+
+The script validates these requirements after copying the template. If any of them are missing, project creation will succeed but the bootstrap process will stop before adding issues to the board.
 
 ### Tool Setup
 
 Create a .env file and update with your values.
+
+If the repository has no linked project, the script will find the template project named by `GITHUB_PROJECT_TEMPLATE_NAME`, copy it, and link the copy to the repository.
 
 You can create a github token with the "repo" and "project" scope [here](https://github.com/settings/tokens/new).
 
