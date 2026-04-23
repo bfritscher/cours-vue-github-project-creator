@@ -15,7 +15,7 @@ As a User, I want the shopping list to persist even after I close the browser or
 ### Acceptance Criteria
 
 - [ ] When the application loads, it checks `localStorage` for a saved shopping list and displays it.
-- [ ] Any changes to the shopping list (adding, removing, or updating items) are automatically saved to `localStorage`.
+- [ ] Any changes to the shopping list (adding, removing, or updating items) are automatically saved to `localStorage` (Test with Vue DevTools).
 - [ ] If the user closes and reopens the browser, the shopping list remains as they last left it.
 - [ ] The data is stored in `localStorage` as a JSON string.
 
