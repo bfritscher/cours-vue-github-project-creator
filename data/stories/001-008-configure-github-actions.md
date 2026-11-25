@@ -24,8 +24,8 @@ As a developer, I want to configure GitHub Actions to automatically build and de
     },
   }))
   ```
-- [ ] Create a `.github/workflows` directory in your repository (a `.github` folder containing the `workflows` directory).
-- [ ] Create a new file in that directory called `deploy.yml` with the following content:
+- [ ] Create a `.github/workflows` folder in your repository (a `.github` folder containing the `workflows` folder).
+- [ ] Create a new file in that folder called `deploy.yml` with the following content:
 
   ```yaml
   name: Build and Deploy to GH-Pages
